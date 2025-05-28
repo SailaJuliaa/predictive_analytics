@@ -4,9 +4,11 @@
 
 Penyakit sirosis hati merupakan kondisi medis kronis yang ditandai dengan kerusakan hati jangka panjang yang menyebabkan jaringan parut dan kegagalan fungsi hati. Menurut World Health Organization (WHO), penyakit hati termasuk dalam penyebab utama kematian di dunia. Deteksi dini tingkat keparahan sirosis sangat penting untuk menentukan strategi pengobatan yang efektif dan meningkatkan kualitas hidup pasien.
 
-Namun, klasifikasi tingkat keparahan sirosis sering kali sulit dilakukan secara akurat hanya dengan penilaian klinis konvensional. Oleh karena itu, diperlukan pendekatan prediktif berbasis data untuk membantu dalam pengambilan keputusan medis
+Klasifikasi tingkat keparahan sirosis hati menjadi sangat penting untuk menentukan tindakan medis yang tepat serta memprediksi prognosis pasien. Namun, proses klasifikasi ini seringkali memerlukan prosedur medis yang mahal, invasif, dan tidak selalu tersedia secara merata, khususnya di daerah dengan sumber daya kesehatan terbatas. Maka, diperlukan pendekatan prediktif berbasis data untuk membantu dalam pengambilan keputusan medis
 
-- Masalah ini penting karena keterlambatan dalam deteksi tingkat keparahan sirosis dapat menyebabkan komplikasi serius seperti gagal hati, kanker hati, dan bahkan kematian (https://aasldpubs.onlinelibrary.wiley.com/doi/pdf/10.1002/hep.29756). Dengan memanfaatkan algoritma machine learning, kita dapat membangun sistem prediksi yang memberikan informasi cepat dan akurat kepada tenaga medis (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0256428)
+- Masalah ini penting karena keterlambatan dalam memprediksi outcome sirosis hati dapat menyebabkan luputnya penanganan dini terhadap risiko komplikasi serius seperti gagal hati, kanker hati, dan bahkan kematian. Dengan memanfaatkan algoritma machine learning, kita dapat membangun sistem prediksi yang mampu memberikan informasi cepat dan akurat kepada tenaga medis mengenai potensi hasil klinis pasien, sehingga memungkinkan intervensi yang lebih tepat waktu dan berbasis data.
+
+ ([https://pmc.ncbi.nlm.nih.gov/articles/PMC11867977/]) ([https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-024-05726-2])
 
 ## Business Understanding
 
@@ -14,18 +16,18 @@ Namun, klasifikasi tingkat keparahan sirosis sering kali sulit dilakukan secara 
 
 Menjelaskan pernyataan masalah latar belakang:
 
-- Bagaimana membangun model prediktif akurat untuk klasifikasi
-- Algoritma machine learning mana yang memberikan performa terbaik dalam hal akurasi dan kestabilan prediksi?
+- Apakah data klinis seperti usia, hasil laboratorium, dan kondisi medis terkait dapat digunakan untuk memprediksi outcome pasien sirosis hati secara akurat?
+- Dapatkah model prediksi berbasis machine learning membantu tenaga medis dalam pengambilan keputusan yang lebih cepat dan akurat untuk pasien sirosis hati?
 
 ### Goals
 
 Menjelaskan tujuan dari pernyataan masalah:
-- Membangun model klasifikasi untuk memprediksi tingkat keparahan sirosis hati dengan akurasi tinggi
+- Membangun model prediksi berbasis machine learning yang dapat mengklasifikasikan outcome pasien sirosis hati ke dalam beberapa kategori
 - Mengevaluasi beberapa algoritma machine learning untuk menemukan model terbaik dengan kestabilan antara data latih dan uji
 
 ### Solution statements
-- Menggunakan beberapa algoritma klasifikasi: Decision Tree, Random Forest, XGBoost, LightGBM, SVM, dan Logistic Regression.
-- Melakukan hyperparameter tuning untuk model Random Forest, XGBoost, dan LightGBM
+- Solusi yang ditawarkan adalah pengembangan sistem prediksi outcomes pasien sirosis hati dengan memanfaatkan algoritma klasifikasi machine learning : Decision Tree, Random Forest, XGBoost, LightGBM, SVM, dan Logistic Regression.
+- Penerapan teknik feature engineering untuk meningkatkan kualitas fitur prediktif.
 - Mengevaluasi model dengan metrik: akurasi, precision, recall, dan f1-score untuk memilih model terbaik berdasarkan kestabilan dan performa prediksi
 
 ## Data Understanding
@@ -33,100 +35,132 @@ Dataset yang digunakan dalam proyek.
 (https://www.kaggle.com/datasets/harshitstark/prediction-of-cirrhosis-outcomes/data). 
 
 ### Variabel-variabel pada Dataset:
-- age : Usia pasien
-- ID : nama pengenal unik
-- Sex : Jenis kelamin
-- Bilirubin : tingkat birilubin dalam darah
-- Albumin : Kadar Albumin
-- Prothrombin : Waktu pembekuan darah
-- Stage : tingkat keparahan sirosis hati
-- Drug : Jenis pengobatan
-- N_days : jumlah pengamatan
-- Status :label target
-- Ascites : penumpukan cairan pada tubuh
-- Hepatomology : pencegahan
-- Spiders : garis pembuluh darah
-- Edema : pembengkakan
-- Cholesterol : kolesterol
-- Alk_Phos : tingkat kesehatan hati
-- SGOT : Enzim dalam tubuh
-- Tryglicerides :jumlah lemak
-- Platelets : Kepingan darah
-- copper : kadar mineral
+- age : Usia pasien.
+- Sex : Jenis kelamin sering memengaruhi prognosis dan respons pengobatan.
+- Bilirubin : kadar bilirubin Indikator utama fungsi hati.
+- Albumin : Menunjukkan status nutrisi dan fungsi hati.
+- Prothrombin : Indikator fungsi pembekuan darah dan fungsi hati.
+- Stage : Tingkat keparahan sirosis.
+- Drug : Jenis pengobatan yang diterima
+- Status : Label target
+- Ascites : Gejala klinis Penumpukan cairan di perut.
+- Hepatomology : pencegahan atau riwayat penyakit hati.
+- Spiders : Pembuluh darah kecil di kulit, Tanda klinis sirosis
+- Edema : Pembengkakan.
+- Cholesterol : Jumlah kolesterol yang berhubungan dengan metabolisme hati.
+- Alk_Phos (Alkaline Phosphatase) : Enzim yang mengindikasikan kesehatan hati.
+- SGOT : Enzim hati AST.
+- Tryglicerides : Kadar lemak dalam darah.
+- Platelets : Jumlah keping pada darah.
+- copper : Kadar tembaga untuk mendeteksi kelainan seperti wilson.
 
 ### Kondisi dataset :
 - Pengecekan missing values : Dataset tidak memiliki missing value dari 7905 jumlah data
 - Data duplikat : tidak menemukan data duplikat
-- pengecekan Outlier : Terdapat beberapa outlier pada beberapa variabel namun masi dalam rencang yang wajar
--  Distribusi Data: Data kategorikal cukup seimbang namun, ada beberapa variabel kategorikal memiliki distribusi tidak merata, seperti SEX yang didominasi perempuan
--  Tipe data : Semua kolom memiliki tipe data yang sesuai, Variabel numerik bertipe float64/int64, Variabel kategorikal bertipe object
+- pengecekan Outlier : terdapat extreme outlier pada numeric kolom yaitu birilubin, cholesterol, SGOT, Alk_Phos, Tryglicerides
+- Menghapus Outlier ekstrem pada beberapa kolom dan hasil jumlah baris 7905 menjadi 79089
+
 
 ### Ekplorasi data
-
-1. Korelasi matrix
-- korelasi positif :
-  Bilirubin dengan Copper (0.44)
-  Albumin dengan N_Days (0.26)
-  SGOT dengan Bilirubin (0.37) dan Cholesterol (0.33)
-  Prothrombin dengan Stage (0.25)
-- korelasi negatif :
-  Albumin dengan Stage  (-0.23)
-  Albumin dengan Bilirubin (-0.30) 
-  N_Days dengan Bilirubin (-0.35)
+#### Univariate analysis
+1. Numerical feature. 
+- Bilirubin, Cholesterol, Copper, SGOT, Alk_Phos, Triglycerides menunjukkan distribusi right-skewed (banyak nilai ekstrem tinggi).
+- Albumin, Prothrombin, Platelets cenderung normal atau mendekati simetris.
+- Stage penyakit menunjukkan distribusi data yang hampir merata antar tahap (1–4), meskipun Stage 2 dan Stage 4 sedikit lebih dominan.
+- N_Days memiliki distribusi skewed, dengan sebagian besar pasien berada di bawah 2000 hari.
   
-2. Histogram
-Histogram ini menampilkan distribusi masing-masing fitur numerik dalam dataset :
--Beberapa fitur memiliki distribusi skewed ke kanan seperti Bilirubin, Cholesterol, Alk_phos, SGOT, Copper yang menunjukan banyak nilai kecil dan sedikit nilai yang sangat tinggi.
--Beberapa fitur seperti Albumin, Platelets, dan age memiliki distribusi yang relatif normal 
--Fitur stage menunjukan data dalam kategori 1-4 yang menggambarkan stadium sirosis
+![univariate numerical](https://github.com/user-attachments/assets/555c6981-aad9-48fe-9115-38dae7d49c60)
 
-3. Distribusi label 
--Dataset tidak seimbang (imbalance class problem), di mana kelas CL sangat sedikit. Hal ini penting untuk diperhatikan karena model dapat bias terhadap kelas mayoritas (C dan D).
--Diperlukan teknik penanganan imbalance Oversampling (SMOTE)
--Kategori C (mungkin "Cirrhosis") merupakan kelompok terbesar, diikuti oleh D (mungkin "Death") dan CL (mungkin "Clinically Latent") sebagai yang paling sedikit
+2. Categorical Feature
+#### Status:
+ - Kategori C mendominasi dengan jumlah > 4500.
+ - D sekitar 2200-an.
+ - CL sangat kecil (< 500), memperkuat indikasi class imbalance.
+   
+![Univariate categorical1](https://github.com/user-attachments/assets/7a9ef2c9-5d68-403e-befd-65e8f1e791bc)
 
-4. Distribusi jenis kelamin
-- Mayoritas pasien adalah perempuan (F), yaitu sebesar 92.8% dan Pasien laki-laki (M) hanya sebesar 7.2%.
-- Terdapat ketidakseimbangan gender yang cukup besar, yang bisa memengaruhi hasil model prediksi apabila variabel jenis kelamin memiliki pengaruh terhadap status sirosis.
+#### Jenis Kelamin (Sex):
+ - Dominasi besar pada pasien perempuan (F) > 6500.
+ - Laki-laki (M) sangat sedikit (< 1000)
+ - Ini menunjukkan ketimpangan distribusi gender yang bisa menjadi pertimbangan dalam interpretasi hasil model.
+   
+![Univariate categorical1](https://github.com/user-attachments/assets/7a9ef2c9-5d68-403e-befd-65e8f1e791bc)
+
+#### Multivariate Analysis
+1. Categorical Feature  'Status'
+Terdapat tiga kategori status pasien: C, D, dan CL.
+- Status C (Compensated Cirrhosis) mendominasi jumlah pasien.
+- Status D (Decompensated Cirrhosis) berada di posisi kedua.
+- Status CL (Cirrhosis Liver Failure) memiliki jumlah paling sedikit.
+- Distribusi yang tidak seimbang ini mengindikasikan adanya potensi class imbalance yang perlu ditangani dalam proses pemodelan prediktif.
+
+![distribusi kategorikal](https://github.com/user-attachments/assets/b53dbac2-4cc3-4ca7-adb9-e133ac4da1f6)
+
+2. Numerical Feature
+Korelasi antar Fitur Numerik
+
+Korelasi tertinggi terjadi antara:
+   - SGOT dan Alk_Phos (r = 0.43)
+   - Alk_Phos dan Cholesterol (r = 0.35)
+   - SGOT dan Bilirubin (r = 0.35)
+     
+Korelasi negatif ditemukan antara Albumin dengan Bilirubin dan SGOT, yang berpotensi sebagai indikator kerusakan hati.
+ - Tidak ditemukan multikolinearitas ekstrem antar fitur (tidak ada nilai korelasi > 0.8), sehingga tidak perlu melakukan penghapusan fitur karena kolinearitas.
+
+ ![korelasi matrix](https://github.com/user-attachments/assets/496bbe7a-b72f-47a3-b62e-2f1172f22cbd)
+
+#### Kesimpulan pada Ekplorasi Data
+- Distribusi Fitur Kategorikal bersifat tidak seimbang, terutama pada fitur Sex dan Status.
+- Fitur numerik menunjukkan berbagai bentuk distribusi, banyak yang tidak normal dan skewed.
+- Korelasi antar fitur numerik lemah sampai sedang, tidak ada multikolinearitas tinggi.
 
 
 ## Data Preparation
-1. Feature Engineering :
-Terdapat fitur baru yang dapat diturunkan dari fitur-fitur penting dalam dataset, yaitu bilirubin, albumin, platelet, dan stage. Fitur-fitur ini memiliki peran signifikan dalam mengevaluasi tingkat keparahan sirosis hati dan membantu dalam prediksi outcome klinis pasien Bilirubin_Albumin_Ratio Rasio ini menunjukkan keseimbangan antara fungsi ekskresi (bilirubin) dan sintesis hati (albumin). Nilai tinggi menandakan kerusakan hati yang lebih parah. Stage_4 Fitur biner untuk mengidentifikasi pasien dengan sirosis tahap lanjut (Stage 4), yang memiliki risiko komplikasi lebih besar. Albumin_x_Platelets Kombinasi albumin dan trombosit menggambarkan kondisi sintesis hati dan sirkulasi darah. Nilai rendah bisa menunjukkan sirosis berat atau hipertensi portal
-2. Splitting data :
-- memisahkan fitur data dan label
-- Memisahkan dataset menjadi data latih (80%) dan data uji (20%) menggunakan modul train_test_split dari library scikit-learn
-3. Standarisasi dan Encoding :
-- Pemilihan kolom : mendeteksi kolom numerical dan kategorical otomatis dari data latih
-- Preprocessing Data : Mengubah variabel kategorikal menjadi representasi numerik menggunakan One-Hot Encoding dan mengubah skala fitur numerik menjadi skala seragam menggunakan StandardScaler.
-4. Pipeline :
-- Penggunaan SMOTE : sebagai penanganan imbalance data
-- Preprocessor sebagai fungsi melakukan proses standarisasi dan encoding digabungkan sebagai Pipeline dari library scikit-learn
-5. Transformasi data : Menerapkan preprocessing (standarisasi dan encoding)  pada data latih dan data uji untuk mempersiapkan data bagi model
-6. Tunning : Agar model lebih akurat 
+#### 1. Feature Engineering :
+- Rasio Bilirubin terhadap Albumin untuk membuat fitur baru yang mencerminkan keseimbangan antara dua indikator penting fungsi hati: Bilirubin (indikator kerusakan hati) dan Albumin (indikator fungsi hati).
+- Fitur Biner untuk stadium 4 (Stage 4) untuk membuat fitur biner yang merepresentasikan apakah pasien berada di tahap paling parah (Stage 4) dari penyakit.
+- Interaksi antara Albumin dan Platelet untuk menambahkan fitur interaksi antara dua variabel numerik penting.
+
+##### 2. Encoding Target Variabel 'Status':
+- Menggunakan labelEncoder untuk tahap encoding
+- Tujuan encoding variabel status untuk mengubah target kategorikal (Status: C, D, CL) menjadi format numerik agar bisa digunakan dalam algoritma pembelajaran mesin, khususnya XGBoost.
+
+#### 3. Splitting Data:
+- Pemisahan fitur dan target untuk memisahkan input (fitur X) dan output (target y) untuk keperluan pelatihan model agar model hanya belajar dari fitur bukan target
+  
+#### 4. Train_test split :
+- Membagi data menjadi 80% data latih dan 20% data uji, dengan mempertahankan proporsi kelas target menggunakan stratify
+- Tujuan stratifikasi untuk mencegah ketimpangan distribusi kelas di data latih dan uji, yang penting dalam kasus class imbalance seperti ini
+
+#### 5. Preprocessing:
+- Identifikasi fitur numeric dan kategorical dengan tujuan untuk Memisahkan fitur berdasarkan jenis datanya untuk preprocessing yang sesuai
+- Standarisasi dan One-Hot Encoding menggunakan *StandardScaler* untuk menstandarkan fitur numerik menjadi distribusi dengan mean 0 dan std dev 1, dan *OneHotEncoder* untuk mengubah fitur kategorikal menjadi format biner
+- Keuntungan : Standardisasi membantu algoritma seperti SVM, Logistic Regression, dan XGBoost agar tidak bias terhadap fitur berskala besar. One-hot encoding membuat data kategorikal bisa dibaca oleh model sambil menghindari dummy variable trap (drop='first').
+
+#### 6. Pembuatan Processor
+-  Menerapkan transformasi yang berbeda ke fitur numerik dan kategorikal dalam satu objek pipeline.
+-  Keuntungan nya efisien dan modular, mudah diintegrasikan ke dalam pipeline pemodelan.
+Meningkatkan keterbacaan kode
 
 ## Modeling
-1. Decision Tree
+#### 1. Decision Tree
 Kelebihan dari Decision Tree terletak pada kemampuannya yang mudah dijelaskan serta mendukung baik data numerik maupun kategorikal. Namun, metode ini rentan terhadap overfitting, terutama jika struktur pohon terlalu dalam. Selain itu, Decision Tree cenderung sensitif terhadap ketidakseimbangan kelas dan bisa menunjukkan performa yang tidak konsisten.
 
 - Prinsip kerja:
-Memulai dengan membagi data berdasarkan fitur paling informatif.
-Penentuan titik split menggunakan metrik seperti Gini Index atau Entropy.
-Proses pemisahan dilakukan secara berulang hingga membentuk cabang pohon.
-Setiap node akhir (leaf) mewakili klasifikasi berdasarkan mayoritas data.
+Membagi data berdasarkan fitur paling informatif menggunakan Gini atau Entropy.
+Pemisahan dilakukan rekursif hingga semua data terklasifikasi.t.
 
 - Langkah implementasi:
-Model diinisialisasi dengan random_state=2024.
+_random_state_ tidak diset secara eksplisit, menggunakan default.
+Evaluasi menggunakan skor rata-rata berbobot
 Pelatihan dilakukan pada data training yang telah dipersiapkan.
 Prediksi dilakukan untuk data pelatihan dan pengujian.
-Evaluasi performa memakai skor rata-rata berbobot (weighted).
 
 - Parameter penting:
-random_state=2024 untuk memastikan hasil yang konsisten.
-Parameter lainnya dibiarkan default.
-average="weighted" digunakan agar hasil tidak terpengaruh ketimpangan jumlah kelas.
+_random_state_ menggunakan default.
 
-2. Random Forest
+
+#### 2. Random Forest
 Random Forest menawarkan kestabilan yang baik dan cukup tahan terhadap noise dalam data. Kekurangannya termasuk komputasi yang berat, interpretasi yang tidak sederhana, serta memerlukan jumlah data yang memadai.
 
 - Cara kerja:
@@ -136,17 +170,16 @@ Hanya subset fitur yang digunakan pada tiap pemisahan.
 Hasil akhir ditentukan lewat voting mayoritas
 
 - Langkah implementasi:
-Gunakan RandomForestClassifier dengan 100 pohon (n_estimators=100).
+Gunakan _RandomForestClassifier_ menggunakan default (n_estimators=100).
 Latih model pada data pelatihan.
-Lakukan prediksi menggunakan metode ensemble.
-Evaluasi dengan skor rata-rata berbobot.
+Evaluasi menggunakan _average='weighted'_
 
 - Parameter utama:
 n_estimators=100.
 Kriteria pemisahan memakai nilai default.
 Evaluasi memakai metode average="weighted" untuk kompensasi kelas tidak seimbang.
 
-3. XGBoost
+#### 3. XGBoost
 Kelebihan utama XGBoost adalah kecepatannya, efisiensi komputasi, dan kemampuannya mengurangi risiko overfitting. Meski begitu, model ini relatif kompleks, membutuhkan sumber daya besar, dan perlu penyesuaian parameter yang akurat agar optimal
 
 - Mekanisme kerja:
@@ -156,36 +189,35 @@ Optimasi dilakukan menggunakan pendekatan penurunan gradien.
 Gabungan semua model lemah membentuk prediksi akhir.
 
 - Langkah-langkah:
-Gunakan GradientBoostingClassifier sebagai inisialisasi model.
+ Menggunakan _use_label_encoder=False_ untuk Mencegah peringatan.
 Latih model menggunakan dataset training.
 Lakukan prediksi secara bertahap.
-Evaluasi menggunakan skor rata-rata berbobot
+_eval_metric='logloss'_ Untuk evaluasi klasifikasi
+Evaluasi _average='weighted'_
 
 - Parameter yang digunakan:
-Learning rate dan jumlah estimator mengikuti nilai default.
 Evaluasi hasil menggunakan average="weighted"
 
-4. SVM :
+#### 4. SVM :
 SVM sangat efektif ketika menangani data berdimensi tinggi. Akan tetapi, metode ini memerlukan komputasi yang intensif, sulit ditafsirkan secara intuitif, dan perlu pemilihan kernel yang sesuai agar efektif.
 
 - Konsep kerja:
 Menentukan hyperplane terbaik untuk memisahkan kelas.
 Menerapkan kernel trick untuk mengatasi data non-linear.
 Fokus memaksimalkan margin antar kelas.
-Mengandalkan support vectors untuk proses klasifikasi.
+Mengandalkan support vectors untuk proses klasifikasi dan kernel RBF.
 
 - Tahapan penerapan:
-Inisialisasi model dengan SVC(kernel='rbf').
+Inisialisasi model dengan _SVC()_.
 Latih model pada data training yang sudah distandarisasi.
 Lakukan prediksi terhadap data baru.
 Gunakan evaluasi berbobot untuk menilai performa.
 
 - Parameter:
-Kernel RBF digunakan untuk data non-linear.
-random_state=2024 dipakai untuk konsistensi.
-Evaluasi melalui average="weighted"
+Default kernel adalah _rbf_, cocok untuk data non-linear.
+Evaluasi menggunakan _average='weighted'_
 
-5. LightGBM
+#### 5. LightGBM
 LightGBM dikenal cepat dan efisien, dengan performa tinggi terutama pada dataset besar. Di sisi lain, model ini butuh banyak sumber daya, memerlukan penyesuaian parameter, dan interpretasinya tidak mudah
 
 - Prinsip kerja:
@@ -195,7 +227,7 @@ Mengadopsi histogram learning untuk efisiensi memori.
 Memungkinkan pelatihan secara paralel.
 
 - Langkah-langkah implementasi:
-Inisialisasi model dengan LGBMClassifier.
+Inisialisasi model dengan _LGBMClassifier()_.
 Lakukan pelatihan pada data yang telah diproses.
 Prediksi dilakukan secara bertahap.
 Evaluasi menggunakan rata-rata berbobot
@@ -204,7 +236,7 @@ Evaluasi menggunakan rata-rata berbobot
 Parameter default dipertahankan untuk learning rate dan jumlah daun.
 Digunakan average="weighted" untuk penyesuaian terhadap distribusi kelas yang tidak merata.
 
-6. Logistic Regression
+#### 6. Logistic Regression
 Logistic Regression dikenal karena sederhana dan mudah dipahami. Meskipun begitu, algoritma ini tidak ideal untuk masalah kompleks, sensitif terhadap pencilan, dan kinerjanya bisa terganggu jika terdapat ketidakseimbangan kelas
 
 - Cara kerja:
@@ -214,92 +246,165 @@ Proses optimasi dilakukan melalui gradient descent.
 Model menghasilkan probabilitas, bukan hanya label kelas
 
 - Langkah-langkah:
-Gunakan LogisticRegression(multi_class='multinomial', max_iter=1000).
+Gunakan _LogisticRegression(max_iter=1000)_
 Lakukan pelatihan model pada data training.
 Prediksi hasil dalam bentuk probabilitas.
 Evaluasi hasil prediksi dengan skor berbobot.
 
 - Parameter:
-multi_class='multinomial' untuk multi-klasifikasi.
-max_iter=1000 agar proses konvergen.
-Evaluasi menggunakan average="weighted"
+_max_iter=1000_ Meningkatkan jumlah iterasi agar proses konvergen
+Multi-klasifikasi otomatis didukung 
+Evaluasi menggunakan _average="weighted"_
 
 ## Evaluation
 Metrik yang digunakan
 Dalam proyek klasifikasi ini, evaluasi performa model dilakukan dengan menggunakan empat metrik utama, yaitu akurasi, presisi, recall, dan F1-score. Setiap metrik memberikan perspektif berbeda terhadap kinerja model, terutama dalam konteks data yang memiliki distribusi kelas tidak seimbang.
 
-1. Akurasi
+### 1. Akurasi
+
 Akurasi menggambarkan sejauh mana prediksi model sesuai dengan label sebenarnya. Metrik ini dihitung sebagai rasio antara jumlah prediksi yang benar terhadap seluruh jumlah data.
 Rumus:
 Akurasi = (Prediksi Benar) / (Total Data)
-Meskipun sederhana, akurasi bisa menyesatkan jika kelas tidak terdistribusi secara merata. Oleh karena itu, perlu dilengkapi dengan metrik lain.
+Meskipun akurasi mudah dipahami, metrik ini bisa menyesatkan jika distribusi kelas tidak seimbang, seperti pada kasus ini (jumlah data kelas CL sangat sedikit).
+- Logistic Regression	0.779
+- Decision Tree	0.715
+- Random Forest	0.794
+- SVM	0.793
+- XGBoost	0.809
+- LightGBM	0.800
+_XGBoost menunjukkan akurasi tertinggi, disusul oleh LightGBM dan Random Forest_
 
-2. Presisi
+### 2. Presisi
+
 Presisi menunjukkan proporsi prediksi positif yang benar-benar tepat. Ini penting terutama saat biaya dari kesalahan prediksi positif tinggi.
 Rumus:
 Presisi = True Positive / (True Positive + False Positive)
 Presisi digunakan untuk mengetahui seberapa andal model dalam memberikan hasil positif yang akurat.
+- Logistic Regression	0.748
+- Decision Tree	0.716
+- Random Forest	0.788
+- SVM	0.797
+- XGBoost	0.803
+- LightGBM	0.794
+ _SVM dan XGBoost unggul dalam memberikan prediksi yang lebih tepat_
 
-3.  Recall
+### 3.Recall
 Recall mengukur kemampuan model dalam mengenali seluruh kasus positif yang ada. Metrik ini berguna saat kegagalan mendeteksi kasus positif dianggap kritis.
 Rumus:
 Recall = True Positive / (True Positive + False Negative)
 Semakin tinggi nilai recall, semakin baik model dalam menangkap seluruh kasus yang seharusnya diklasifikasikan positif.
+- Logistic Regression	0.779
+- Decision Tree	0.715
+- Random Forest	0.794
+- SVM	0.793
+- XGBoost	0.809
+- LightGBM	0.800
+_XGBoost dan LightGBM kembali menunjukkan performa tinggi, mengindikasikan kemampuan dalam mendeteksi seluruh kelas_
 
-4. F1-Score
+### 4.F1-Score
 F1-Score merupakan rata-rata harmonis dari presisi dan recall. Metrik ini sangat berguna ketika diperlukan keseimbangan antara dua metrik tersebut, terutama dalam kondisi distribusi kelas yang tidak seimbang.
 Rumus:
 F1-Score = 2 × (Presisi × Recall) / (Presisi + Recall)
+- Logistic Regression	0.760
+- Decision Tree	0.715
+- Random Forest	0.783
+- SVM	0.777
+- XGBoost	0.799
+- LightGBM	0.790
+_XGBoost kembali menjadi yang terbaik, menyeimbangkan antara presisi dan recall secara optimal_
 
-klasifikasi umum berdasarkan skor F1:
-Tinggi (0.90–1.00): Model sangat presisi dan sensitif
-Sedang (0.70–0.89): Model cukup baik dan seimbang
-Rendah (0.50–0.69): Model kurang optimal
-Sangat rendah (<0.50): Model gagal menangani klasifikasi dengan baik
+## Penerapan Metrik pada Evaluasi Model
+### Hasil Evaluasi
+#### 1.Logistic Regression
+- Training Accuracy, Precision, Recall, F1-score: 78%
+- Testing Accuracy, Precision, Recall, F1-score: 78%
+- Performa antara data latih dan data uji relatif konsisten, sehingga tidak ada indikasi overfitting yang signifikan.
+- Precision dan recall sangat tidak seimbang antar kelas, terutama pada kelas CL yang memiliki nilai 0 untuk semua metrik, menandakan model sama sekali gagal mengenali kelas ini.
+- F1-score keseluruhan tergolong sedang, yang menunjukkan bahwa model cukup baik dalam mengenali kelas mayoritas.
 
-### Penerapan Metrik pada Evaluasi Model
-- Decision Tree:
-Memiliki akurasi dan F1-score sangat tinggi pada data latih (100%), namun anjlok di data uji (72%). Hal ini menandakan overfitting. Selain itu, presisi dan recall tidak seimbang pada kelas CL, menghasilkan performa minoritas yang sangat buruk.
+#### 2. Decision Tree
+- Training Accuracy, Precision, Recall, F1-score: 100%
+- Testing Accuracy, Precision, Recall, F1-score: 71%
+- Perbedaan besar antara performa data latih dan data uji menunjukkan adanya overfitting pada model.
+- Precision dan recall terlihat tidak seimbang antar kelas, terutama pada kelas CL yang memiliki performa sangat rendah.
+- F1-score keseluruhan tergolong sedang, yang menunjukkan bahwa meskipun model cukup akurat untuk kelas mayoritas, performa pada kelas minoritas masih perlu diperbaiki.
 
-- XGBoost:
-Mencapai akurasi 86% di pelatihan dan 82% di pengujian, menunjukkan stabilitas performa yang baik. Presisi dan recall seimbang di seluruh kelas, menghasilkan F1-score tinggi yang menandakan model sangat andal dan akurat.
+#### 3. Random Forest
+- Training Accuracy, Precision, Recall, F1-score: 100%
+- Testing Accuracy, Precision, Recall, F1-score: 79%
+- Performa model pada data latih dan uji tergolong stabil meskipun ada indikasi overfitting ringan.
+- Precision dan recall memiliki kinerja yang sangat baik pada kelas mayoritas C dan D, namun pada kelas CL, performa model sangat rendah (precision 0.67, recall 0.11).
+- F1-score keseluruhan tergolong cukup baik, tetapi ketidakseimbangan performa antar kelas perlu diperbaiki.
 
-- Random Forest:
-Hasil training sempurna (100%), sementara testing stabil di 82%. Namun, seperti Decision Tree, model ini kesulitan mendeteksi kelas minoritas (CL), dengan recall sangat rendah. Tetap memiliki F1-score keseluruhan yang baik.
+#### 4. SVM
+- Training Accuracy, Precision, Recall, F1-score: 81%
+- Testing Accuracy, Precision, Recall, F1-score: 79%
+- Perbedaan performa antara data latih dan data uji tidak terlalu besar, menunjukan bahwa model tidak mengalami overfitting secara signifikan.
+- Precision dan recall terlihat tidak seimbang pada kelas CL yang memiliki recall sangat rendah (0.04).
+- F1-score tergolong baik, yang berarti model cukup akurat untuk mengenali kelas mayoritas.
 
-- SVM:
-Memiliki akurasi dan F1-score 86% (training) dan 82% (testing), dengan perbedaan kecil antar keduanya. Menunjukkan model tidak overfit, namun performa masih terbatas untuk kelas CL.
+#### 5. XGBoost
+- Training Accuracy, Precision, Recall, F1-score: 99%
+- Testing Accuracy, Precision, Recall, F1-score: 81%
+- Perbandingan training dan testing akurasi menunjukkan overfitting namun dengan performa testing yang sangat baik.
+- Precision dan recall yang cukup seimbang pada kelas mayoritas, namun masih rendah untuk kelas CL.
+- F1-score pada kategori tinggi yang berarti model sangat akurat secara keseluruhan.
 
-- Logistic Regression:
-Akurasi dan F1-score berada di kisaran sedang (80% training, 77% testing). Model gagal total mendeteksi kelas CL (semua metrik = 0). Ini menunjukkan bahwa pendekatan linier tidak cukup kompleks untuk data ini.
-
-- LightGBM:
-Memberikan performa tertinggi di data uji (93%), namun dengan indikasi overfitting ringan karena hasil training yang lebih tinggi (97%). Precision dan recall kurang optimal pada kelas minoritas, tetapi F1-score masih masuk dalam kategori tinggi
+#### 6. LightGBM
+- Training Accuracy, Precision, Recall, F1-score: 95%
+- Testing Accuracy, Precision, Recall, F1-score: 80%
+- Perbedaan performa antara data latih dan data uji cukup besar, yang menunjukkan kemungkinan adanya overfitting ringan pada model.
+- Precision dan recall antar kelas masih belum seimbang, terutama pada kelas CL yang memiliki recall sangat rendah.
+- F1-score tergolong baik yang berarti model cukup akurat dalam memprediksi sebagian besar kelas.
 
 ### Kesimpulan Evaluasi Model
-- Model Terbaik:
-Berdasarkan kombinasi semua metrik, XGBoost, Random Forest, dan LightGBM memberikan hasil terbaik. Ketiganya mencatat skor tinggi pada akurasi, precision, recall, dan F1-score saat testing.
+#### Performa terbaik:
+- Model XGBoost, Random Forest, dan LightGBM memberikan performa terbaik berdasarkan metrik akurasi, precision, recall, dan f1-score.
 
-- Model Paling Stabil:
-XGBoost menunjukkan stabilitas performa terbaik antara data latih dan uji, tanpa indikasi overfitting serius.
+#### Performa sangat tinggi
+- XGBoost menunjukkan performa yang sangat tinggi dan cukup stabil antara data latih (99%) dan uji (81%), meskipun sedikit overfit.
 
-- Performa Tertinggi:
-LightGBM mencapai skor tertinggi pada data uji (93%) meskipun dengan indikasi overfitting ringan.
+#### Akurasi tertinggi
+- Random Forest mencatat akurasi tinggi pada data uji (79%) namun sangat overfit pada data latih (100%).
 
-- Overfitting:
-Terjadi paling parah pada Decision Tree, disusul oleh Random Forest dan LightGBM. Sementara SVM dan Logistic Regression menunjukkan performa lebih stabil, tetapi dengan hasil metrik yang lebih rendah.
+#### Akurasi cukup baik
+- LightGBM memiliki hasil akurasi yang baik (80% pada testing), namun masih menunjukkan potensi overfitting ringan.
+
+_Ketiganya memiliki hasil testing accuracy, precision, recall, dan f1-score di kisaran 80%, yang tergolong tinggi._
+
+#### Overfitting:
+- Terjadi paling parah pada Decision Tree (100% training, 71% testing), serta Random Forest dan LightGBM, meskipun dampaknya lebih ringan.
+Sementara XGBoost, SVM, dan Logistic Regression menunjukkan kestabilan antara data training dan testing, dengan Logistic Regression memiliki performa paling rendah di antara model-model lain.
 
 ## Kesimpulan 
-Dalam pengembangan model prediksi untuk klasifikasi sirosis hati, beberapa tantangan utama berhasil diatasi:
+- Dalam pengembangan model prediksi untuk klasifikasi tingkat sirosis hati, beberapa hal penting telah dicapai dan menjadi sorotan utama dalam proses modeling:
 
-1. Penyusunan Model Prediktif yang Efektif
-   Model yang dikembangkan menunjukkan performa yang baik berdasarkan metrik evaluasi seperti akurasi, precision, recall, dan F1-score. Meski beberapa model belum optimal dalam mengenali kelas minoritas (khususnya kelas CL), secara keseluruhan model cukup andal dalam mengklasifikasikan kategori sirosis yang lebih umum. Ini membuktikan bahwa solusi yang dibangun mampu memenuhi kebutuhan akan model prediksi yang akurat.
+### 1. Pembangunan Model Prediktif yang Andal
+Model-model yang dikembangkan mampu menunjukkan performa yang cukup baik berdasarkan metrik evaluasi seperti akurasi, presisi, recall, dan F1-score. Meskipun tantangan terbesar adalah pada kelas minoritas (CL) yang memiliki jumlah data jauh lebih sedikit, sebagian besar model cukup andal dalam mengklasifikasikan kelas mayoritas (C dan D). Hal ini menunjukkan bahwa sistem prediksi sudah bekerja efektif dalam skenario dunia nyata, khususnya pada pola yang lebih umum dijumpai.
    
-3. Pencapaian Target Akurasi 85%
-   Beberapa model berhasil mencapai dan bahkan melampaui target akurasi minimum sebesar 85%. LightGBM mencatat akurasi tertinggi pada data uji sebesar 93%, sementara XGBoost dan Random Forest masing-masing mencapai 82%, yang menunjukkan kinerja yang kuat dan konsisten. Hasil ini membuktikan bahwa tujuan utama proyek telah berhasil dicapai.
-   
-4. Evaluasi Komprehensif Terhadap Beragam Algoritma
-   Enam model machine learning Decision Tree, XGBoost, Random Forest, SVM, Logistic Regression, dan LightGBM telah dianalisis secara menyeluruh. Evaluasi berdasarkan metrik yang relevan menunjukkan bahwa XGBoost memberikan performa paling seimbang dan stabil antara data latih dan uji, dengan minim overfitting. Di sisi lain, LightGBM memiliki akurasi tertinggi, namun dengan indikasi overfitting ringan, sedangkan Random Forest menunjukkan performa yang baik namun cenderung overfit pada data pelatihan.
+### 2. Capaian Akurasi Model pada Data Uji
+Berdasarkan evaluasi, tidak ada model yang mencapai target akurasi 85% pada data uji, namun beberapa model berhasil mendekati nilai tersebut dengan performa yang konsisten dan layak digunakan. Model XGBoost mencapai akurasi tertinggi sebesar 80.9%, disusul oleh LightGBM (80.0%), dan Random Forest (79.4%). Sementara itu, model seperti Decision Tree mencatat akurasi yang lebih rendah (71.5%) serta indikasi overfitting yang kuat. Hasil ini menunjukkan bahwa meskipun target akurasi belum sepenuhnya tercapai, performa model sudah berada dalam rentang yang cukup baik untuk aplikasi awal.
+
+### 3. Evaluasi Menyeluruh terhadap Beragam Model
+Enam algoritma telah diuji dan dievaluasi secara komprehensif, yaitu: Logistic Regression, Decision Tree, Random Forest, SVM, XGBoost, dan LightGBM. Hasil evaluasi menunjukkan:
+- XGBoost memberikan kinerja paling seimbang dan stabil antara data latih dan uji, dengan tingkat overfitting yang rendah.
+- LightGBM juga menunjukkan performa tinggi, namun terdapat indikasi overfitting ringan, ditunjukkan dari gap akurasi yang cukup besar antara data latih (94.9%) dan data uji (80.0%).
+- Random Forest tampil baik namun cenderung overfit, dengan akurasi latih 99.9% dan uji 79.4%.
+- Decision Tree paling rentan terhadap overfitting dan memiliki kinerja terendah di data uji.
+- SVM dan Logistic Regression relatif stabil, namun tidak menonjol dalam menangani kelas minoritas.
+
+### 4. Tantangan pada Kelas Minoritas
+Semua model masih memiliki kelemahan signifikan dalam mendeteksi kelas CL, yang jumlahnya sangat sedikit. Nilai recall dan f1-score untuk kelas ini umumnya sangat rendah. Hal ini menandakan perlunya pendekatan tambahan seperti:
+- Oversampling (misal: SMOTE)
+- Class weighting
+- Pengumpulan data tambahan untuk kelas CL
+
+### Secara keseluruhan, proyek ini berhasil mengembangkan model prediktif yang cukup kuat dan dapat digunakan sebagai dasar untuk pengembangan lebih lanjut. XGBoost dan LightGBM menjadi kandidat utama untuk implementasi model akhir. Ke depan, fokus bisa diarahkan pada penyeimbangan data antar kelas dan penyesuaian hyperparameter untuk lebih meningkatkan akurasi serta kinerja model terhadap kelas yang kurang terwakili.
 
 ### Rekomendasi
-Berdasarkan hasil evaluasi, **XGBoost** merupakan pilihan model yang paling direkomendasikan untuk digunakan dalam sistem prediksi obesitas. Model ini menunjukkan kombinasi terbaik antara akurasi tinggi, stabilitas performa, serta risiko overfitting yang rendah dibandingkan model lainnya.
+Berdasarkan seluruh hasil evaluasi dan perbandingan model:
+XGBoost direkomendasikan untuk diimplementasikan dalam sistem prediksi sirosis hati karena:
+- Memiliki performa paling tinggi dan stabil pada data latih maupun uji.
+- Overfitting relatif terkendali.
+- Menunjukkan kemampuan generalisasi yang baik terhadap data baru.
+- LightGBM juga merupakan alternatif kuat, namun perlu perhatian terhadap potensi overfitting dan peningkatan akurasi pada kelas minoritas.
